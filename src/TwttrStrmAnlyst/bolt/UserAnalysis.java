@@ -1,10 +1,13 @@
 package TwttrStrmAnlyst.bolt;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
-import storm.realTraffic.gis.roadgridList;
+import twitter4j.User;
 
-import TwttrStrmAnlyst.utility.GeneralClassList;
+import TwttrStrmAnlyst.utility.GeneralClass;
+import TwttrStrmAnlyst.utility.GeneralMethod;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.IRichBolt;
@@ -19,7 +22,8 @@ public class UserAnalysis implements IRichBolt {
 	private String taskName;
 	private int taskId;
 	private OutputCollector _collector;
-	static GeneralClassList userMapList=null ;	
+	//static GeneralClass userMap=null ;	
+	HashMap<Object, Integer> userCount; // <userID, count>
 
 	public void prepare(Map stormConf, TopologyContext context,
 			OutputCollector collector) {
@@ -32,11 +36,35 @@ public class UserAnalysis implements IRichBolt {
 	}
 
 	public void execute(Tuple input) {
+		User user=(User) input.getValueByField("user");
+		String userID=user.getName();
+		
+		
+		if (!GeneralClass.isExits(userCount, user)) {
+			 //没有此用户，则新建一个用户，并存起来				
+			Integer count=1;
+			userCount.put(user, count);
+
+			return ;
+			  
+		}else{   //如果已经有该用户
+			Integer count=GeneralClass.getCountByObj(user);
+			
+			count++;
+	
+			}
+		Map.Entry[] sortedUserMap=GeneralMethod.getSortedMapByValue(userCount);
+				
+		String filename=GeneralMethod.getIntLocaltime(60, "userCount");
+		//String userProperty=u
+		GeneralMethod.writeToFile(filename, sortedUserMap);	
+		
+		}
+		
+		
 		
 
 		
-	}
-
 	public void cleanup() {
 		// TODO Auto-generated method stub
 		
@@ -44,7 +72,7 @@ public class UserAnalysis implements IRichBolt {
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		// TODO Auto-generated method stub
-		declarer.declare(new Fields("districts"));
+		declarer.declare(new Fields("userCount"));
 	}
 
 	public Map<String, Object> getComponentConfiguration() {
