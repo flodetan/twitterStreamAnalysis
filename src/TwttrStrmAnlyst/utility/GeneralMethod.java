@@ -1,3 +1,10 @@
+/**
+ * twiiterStramAnalysis GeneralMethod.java
+ *
+ * Copyright 2013 Xdata@SIAT
+ * Created:2013-3-25 1:59:52
+ * email: gh.chen@siat.ac.cn
+ */
 package TwttrStrmAnlyst.utility;
 
 import java.io.BufferedWriter;
@@ -10,13 +17,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-
-import org.omg.PortableServer.POAPackage.WrongAdapter;
-
-import main.java.realODMatrix.bolt.CountBolt.District;
 
 import TwttrStrmAnlyst.bolt.countBolt;
 

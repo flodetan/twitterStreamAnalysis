@@ -1,5 +1,9 @@
 /**
- * 
+ * twiiterStramAnalysis GeneralClass.java
+ *
+ * Copyright 2013 Xdata@SIAT
+ * Created:2013-3-25 1:59:52
+ * email: gh.chen@siat.ac.cn
  */
 package TwttrStrmAnlyst.utility;
 
