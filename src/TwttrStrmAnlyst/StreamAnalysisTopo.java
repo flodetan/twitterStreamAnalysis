@@ -1,10 +1,10 @@
-package storm;
+package TwttrStrmAnlyst;
 
-import storm.bolt.LocationAnalysis;
-import storm.bolt.TopicAnalysis;
-import storm.bolt.UserAnalysis;
-import storm.bolt.countBolt;
-import storm.twitterSteamSpout.TwitterSampleSpout;
+import TwttrStrmAnlyst.bolt.LocationAnalysis;
+import TwttrStrmAnlyst.bolt.TopicAnalysis;
+import TwttrStrmAnlyst.bolt.UserAnalysis;
+import TwttrStrmAnlyst.bolt.countBolt;
+import TwttrStrmAnlyst.spout.TwitterSampleSpout;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;

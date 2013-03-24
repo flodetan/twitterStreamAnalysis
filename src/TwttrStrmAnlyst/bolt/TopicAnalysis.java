@@ -1,4 +1,4 @@
-package storm.bolt;
+package TwttrStrmAnlyst.bolt;
 
 import java.util.Map;
 
@@ -8,7 +8,7 @@ import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
 
-public class LocationAnalysis implements IRichBolt{
+public class TopicAnalysis implements IRichBolt{
 
 	/**
 	 * @param args

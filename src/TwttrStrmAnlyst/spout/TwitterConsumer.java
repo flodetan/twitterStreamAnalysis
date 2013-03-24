@@ -5,7 +5,7 @@
  * Created:2013-3-22 下午6:44:30
  * email: gh.chen@siat.ac.cn
  */
-package storm.twitterSteamSpout;
+package TwttrStrmAnlyst.spout;
 
 import java.io.BufferedReader;
 import java.io.File;

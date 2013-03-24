@@ -5,20 +5,11 @@
  * Created:2013-3-22 下午6:59:52
  * email: gh.chen@siat.ac.cn
  */
-package storm.twitterSteamSpout;
-
-/**
- * twiiterStramAnalysis twitterSteamSpout test.java
- *
- * Copyright 2013 Xdata@SIAT
- * Created:2013-3-22 下午6:59:52
- * email: gh.chen@siat.ac.cn
- *
- */
+package TwttrStrmAnlyst.spout;
 
 
+import TwttrStrmAnlyst.utility.*;
 import backtype.storm.Config;
-import storm.bolt.countBolt;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
@@ -185,45 +176,45 @@ public class TwitterSampleSpout extends BaseRichSpout {
     	    	tag.toString()+","+
     	    	userMentioned.toString()+","+
     	    	"{"+text+"}"+"\r\n";
-    	countBolt.writeToFile(cur_dir, twitt);
+    	GeneralMethod.writeToFile(cur_dir, twitt);
     	System.out.print(twitt);*/
     	
     	
-    	countBolt.writeToFile(cur_dir, sdf.format(timeStamp)+";");
+    	GeneralMethod.writeToFile(cur_dir, sdf.format(timeStamp)+";");
     	if(place!=null){
-    		countBolt.writeToFile(cur_dir, place.getFullName().toString()+";");
+    		GeneralMethod.writeToFile(cur_dir, place.getFullName().toString()+";");
     	}else{
-    		countBolt.writeToFile(cur_dir,"N_P"+";");
+    		GeneralMethod.writeToFile(cur_dir,"N_P"+";");
     	}
-    	countBolt.writeToFile(cur_dir, reTwCnt+";");
-    	countBolt.writeToFile(cur_dir, "["+user.getId()+","+user.getScreenName()+","+user.getName()+","+user.getMiniProfileImageURL()+","+user.getStatusesCount()+","+user.getFollowersCount()+","+user.getFollowersCount()+","+user.getLocation()+"];");	
+    	GeneralMethod.writeToFile(cur_dir, reTwCnt+";");
+    	GeneralMethod.writeToFile(cur_dir, "["+user.getId()+","+user.getScreenName()+","+user.getName()+","+user.getMiniProfileImageURL()+","+user.getStatusesCount()+","+user.getFollowersCount()+","+user.getFollowersCount()+","+user.getLocation()+"];");	
 	
-    	countBolt.writeToFile(cur_dir, source+";");	
+    	GeneralMethod.writeToFile(cur_dir, source+";");	
     	if(location!=null){
-    		countBolt.writeToFile(cur_dir, "["+df2.format(location.getLongitude())+","+df2.format(location.getLatitude())+"]"+";");
+    		GeneralMethod.writeToFile(cur_dir, "["+df2.format(location.getLongitude())+","+df2.format(location.getLatitude())+"]"+";");
     	}else{
-    		countBolt.writeToFile(cur_dir,"N_L"+";");
+    		GeneralMethod.writeToFile(cur_dir,"N_L"+";");
     	}
     	if(tag.length>=1){
-    		countBolt.writeToFile(cur_dir, "[");
+    		GeneralMethod.writeToFile(cur_dir, "[");
     		for(int i=0;i<tag.length;i++){
-    		countBolt.writeToFile(cur_dir, tag[i].toString()+",");
+    		GeneralMethod.writeToFile(cur_dir, tag[i].toString()+",");
     		}
-    		countBolt.writeToFile(cur_dir, "];");
+    		GeneralMethod.writeToFile(cur_dir, "];");
     	}else{
-    		countBolt.writeToFile(cur_dir,"N_T"+";");
+    		GeneralMethod.writeToFile(cur_dir,"N_T"+";");
     	}
     	if(userMentioned.length>=1){
-    		//countBolt.writeToFile(cur_dir, "[");
+    		//GeneralMethod.writeToFile(cur_dir, "[");
     		for(int i=0;i<userMentioned.length;i++){
-    	     countBolt.writeToFile(cur_dir, "["+userMentioned[i].getId()+","+userMentioned[i].getScreenName()+","+userMentioned[i].getName()+"]");
+    	     GeneralMethod.writeToFile(cur_dir, "["+userMentioned[i].getId()+","+userMentioned[i].getScreenName()+","+userMentioned[i].getName()+"]");
     		}
-    		//countBolt.writeToFile(cur_dir, "];");
-    		countBolt.writeToFile(cur_dir, ";");
+    		//GeneralMethod.writeToFile(cur_dir, "];");
+    		GeneralMethod.writeToFile(cur_dir, ";");
     	}else{
-    		countBolt.writeToFile(cur_dir,"N_U"+";");
+    		GeneralMethod.writeToFile(cur_dir,"N_U"+";");
     	}
-    	countBolt.writeToFile(cur_dir, "{"+text+"}"+"\r\n");
+    	GeneralMethod.writeToFile(cur_dir, "{"+text+"}"+"\r\n");
     
     	Values tupleValues=new Values(timeStamp,
     			                        place,

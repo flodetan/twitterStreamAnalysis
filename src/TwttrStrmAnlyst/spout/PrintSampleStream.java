@@ -1,4 +1,4 @@
-package storm.twitterSteamSpout;  
+package TwttrStrmAnlyst.spout;  
 //import org.json.JSONObject;  
 //import org.json.JSONObject;  
 //import com.mongodb.BasicDBObject;  

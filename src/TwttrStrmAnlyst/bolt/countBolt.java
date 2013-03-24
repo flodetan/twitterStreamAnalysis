@@ -1,4 +1,4 @@
-package storm.bolt;
+package TwttrStrmAnlyst.bolt;
 
 import java.io.BufferedWriter;
 import java.io.File;

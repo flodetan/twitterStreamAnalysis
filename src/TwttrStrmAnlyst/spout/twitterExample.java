@@ -1,4 +1,4 @@
-package storm.twitterSteamSpout;
+package TwttrStrmAnlyst.spout;
 
 /**
  * twiiterStramAnalysis twitterSteamSpout twitterExample.java
