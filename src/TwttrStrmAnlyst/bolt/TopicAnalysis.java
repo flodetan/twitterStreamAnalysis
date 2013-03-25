@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import twitter4j.HashtagEntity;
+
 import TwttrStrmAnlyst.utility.GeneralClass;
 import TwttrStrmAnlyst.utility.GeneralMethod;
 import backtype.storm.task.OutputCollector;
@@ -31,23 +33,25 @@ public class TopicAnalysis implements IRichBolt{
 	}
 
 	public void execute(Tuple input) {
-		String tags=input.getValueByField("tag").toString().trim();
-		String[] topic;
+		HashtagEntity[] topic = (HashtagEntity[]) input.getValueByField("tag"); //tags=input.getValueByField("tag").toString().trim();
+		//String[] topic;
 		
-		if(tags.equals("N_T") ){
+		if(topic.length<1 ){
 			return;
 		}else{
-			topic=tags.split("#");
+			//String[] tags=topic;
 
-			for(int i=0;i<topic.length;i++){	
-				if(GeneralClass.isExits(topicCount, topic[i]))
+			for(int i=0;i<topic.length;i++){
+				String tag=topic[i].getText().trim();
+				if(GeneralClass.isExits(topicCount, topic[i].getText()))
 				{
 					Integer count=1;
-					topicCount.put(topic[i].trim(), count);
+					
+					topicCount.put(tag, count);
 				}
-				else if( (!topic[i].trim().equals(null)) && (!topicCount.equals(null)) ){
-					Integer count=GeneralClass.getCountByObj(topic[i].trim() );				
-					topicCount.put(topic[i].trim(), count++);
+				else if( (!tag.equals(null)) && (!topicCount.equals(null)) ){
+					Integer count=GeneralClass.getCountByObj(tag );				
+					topicCount.put(tag, count++);
 				}
 			}
 		}

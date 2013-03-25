@@ -29,14 +29,14 @@ public class StreamAnalysisTopo {
 
 //		LocationAnalysis loctnBolt=new LocationAnalysis();
 		UserAnalysis  userBolt= new UserAnalysis();
-		TopicAnalysis topicBolt=new TopicAnalysis();	
+		//TopicAnalysis topicBolt=new TopicAnalysis();	
 
 
 		TopologyBuilder builder = new TopologyBuilder();
 		builder.setSpout("spout", twitterSampleSpout,1);
 		//builder.setBolt("locationBolt", loctnBolt,1);		
 		builder.setBolt("userBolt", userBolt,1).shuffleGrouping("spout");	
-		builder.setBolt("topicBolt", topicBolt,1).shuffleGrouping("spout");
+		//builder.setBolt("topicBolt", topicBolt,1).shuffleGrouping("spout");
 		
 		Config conf = new Config();
 		if(args!=null && args.length > 0) {

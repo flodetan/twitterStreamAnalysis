@@ -77,8 +77,8 @@ public class UserAnalysis implements IRichBolt {
 				for(Entry d:sortedUserMap.entrySet()){
 					rank=rank+1;
 					User user2=(User) d.getKey();			
-					br.write("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getProfileImageURL());
-					System.out.print("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getMiniProfileImageURL());
+					br.write("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getBiggerProfileImageURL());
+					System.out.print("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getBiggerProfileImageURL());
 					br.flush();
 				}
 				rank=0;	
@@ -97,8 +97,8 @@ public class UserAnalysis implements IRichBolt {
 				for(Entry d:sortedStatusMap.entrySet()){
 					rank=rank+1;
 					User user2=(User) d.getKey();			
-					br.write("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getProfileImageURL());
-					System.out.print("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getMiniProfileImageURL());
+					br.write("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getBiggerProfileImageURL());
+					System.out.print("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getBiggerProfileImageURL());
 					br.flush();
 				}
 				rank=0;	
