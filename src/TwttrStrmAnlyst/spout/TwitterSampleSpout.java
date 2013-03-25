@@ -125,6 +125,7 @@ public class TwitterSampleSpout extends BaseRichSpout {
 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("timeStamp",
+        		"twitterID",
                 "place",
                 "user",
                 "reTwCnt",
@@ -146,6 +147,7 @@ public class TwitterSampleSpout extends BaseRichSpout {
         
     	
     	Date timeStamp=ret.getCreatedAt();
+    	long twitterID=ret.getId();
     	Place place=ret.getPlace(); 
     	long reTwCnt=ret.getRetweetCount();
     	twitter4j.User user=ret.getUser();    	
@@ -181,6 +183,7 @@ public class TwitterSampleSpout extends BaseRichSpout {
     	
     	
     	GeneralMethod.writeToFile(cur_dir, sdf.format(timeStamp)+";");
+    	GeneralMethod.writeToFile(cur_dir, twitterID+";");
     	if(place!=null){
     		GeneralMethod.writeToFile(cur_dir, place.getFullName().toString()+";");
     	}else{
@@ -217,6 +220,7 @@ public class TwitterSampleSpout extends BaseRichSpout {
     	GeneralMethod.writeToFile(cur_dir, "{"+text+"}"+"\r\n");
     
     	Values tupleValues=new Values(timeStamp,
+    									twitterID,
     			                        place,
     			                        user,
     			                        reTwCnt,

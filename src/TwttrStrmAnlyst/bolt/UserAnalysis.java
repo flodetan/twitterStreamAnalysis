@@ -1,19 +1,26 @@
 package TwttrStrmAnlyst.bolt;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import twitter4j.User;
 
 import TwttrStrmAnlyst.utility.GeneralClass;
 import TwttrStrmAnlyst.utility.GeneralMethod;
+import backtype.storm.hooks.info.EmitInfo;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
+import backtype.storm.tuple.Values;
 
 public class UserAnalysis implements IRichBolt {
 
@@ -22,8 +29,8 @@ public class UserAnalysis implements IRichBolt {
 	private String taskName;
 	private int taskId;
 	private OutputCollector _collector;
-	//static GeneralClass userMap=null ;	
-	HashMap<Object, Integer> userCount; // <userID, count>
+	HashMap<Object, Integer> userFollowerCount=new HashMap<Object, Integer>(); // <userID, count>
+	//HashMap<Object, Integer> userStatusCount=new HashMap<Object, Integer>();
 
 	public void prepare(Map stormConf, TopologyContext context,
 			OutputCollector collector) {
@@ -35,31 +42,55 @@ public class UserAnalysis implements IRichBolt {
 		
 	}
 
+	/**
+	 *
+	 */
 	public void execute(Tuple input) {
 		User user=(User) input.getValueByField("user");
-		String userID=user.getName();
+		//userFollowerCount=new HashMap<Object, Integer>();
+		//userStatusCount=new  HashMap<Object, Integer>();
+		userFollowerCount.put(user, user.getFollowersCount());
+		//userFollowerCount.put(user, user.getStatusesCount());
 		
+		Date nowDate=new Date();
+		int min=nowDate.getMinutes();
+		int second=nowDate.getSeconds();
 		
-		if (!GeneralClass.isExits(userCount, user)) {
-			 //没有此用户，则新建一个用户，并存起来				
-			Integer count=1;
-			userCount.put(user, count);
-
-			return ;
-			  
-		}else{   //如果已经有该用户
-			Integer count=GeneralClass.getCountByObj(user);
+		if(min%2==0 && second==0){
 			
-			count++;
-	
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			Map<Object, Object> sortedUserMap=GeneralMethod.sortMapByValue(userFollowerCount,10);
+			//ArrayList<Map.Entry<Object,Integer>> sortedUserMap=GeneralMethod.getSortedHashtableByValue(userFollowerCount);
+			String filename=GeneralMethod.getIntLocaltime(2, "mostPopularUser");	
+
+			BufferedWriter br;
+			try {
+				br = new BufferedWriter(new FileWriter(filename,true));
+				int rank=0;
+				for(Entry d:sortedUserMap.entrySet()){
+					rank=rank+1;
+					User user2=(User) d.getKey();			
+					br.write("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getProfileImageURL());
+					System.out.print("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getMiniProfileImageURL());
+					br.flush();
+				}
+				rank=0;	
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		Map.Entry[] sortedUserMap=GeneralMethod.getSortedMapByValue(userCount);
-				
-		String filename=GeneralMethod.getIntLocaltime(60, "userCount");
-		//String userProperty=u
-		GeneralMethod.writeToFile(filename, sortedUserMap);	
+			
+			try {
+				userFollowerCount.clear();
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}	
+
+	}
 		
-		}
+
 		
 		
 		
@@ -72,7 +103,7 @@ public class UserAnalysis implements IRichBolt {
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		// TODO Auto-generated method stub
-		declarer.declare(new Fields("userCount"));
+		declarer.declare(new Fields("user","count"));
 	}
 
 	public Map<String, Object> getComponentConfiguration() {

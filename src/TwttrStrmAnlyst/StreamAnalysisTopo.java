@@ -37,15 +37,15 @@ public class StreamAnalysisTopo {
 		builder.setSpout("spout", twitterSampleSpout,1);
 		//builder.setBolt("locationBolt", loctnBolt,1);
 		//builder.setBolt("topicBolt", topicBolt,1);
-		builder.setBolt("userBolt", userBolt,1);	
+		builder.setBolt("userBolt", userBolt,1).shuffleGrouping("spout");	
 
 		Config conf = new Config();
 		if(args!=null && args.length > 0) {
 			conf.setNumWorkers(2);            
 
-			//LocalCluster  cluster= new LocalCluster();
-			//cluster.submitTopology(args[0], conf, builder.createTopology());
-			StormSubmitter.submitTopology(args[0], conf, builder.createTopology());
+			LocalCluster  cluster= new LocalCluster();
+			cluster.submitTopology(args[0], conf, builder.createTopology());
+			//StormSubmitter.submitTopology(args[0], conf, builder.createTopology());
 		} 
 		else {     
 

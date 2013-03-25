@@ -1,3 +1,4 @@
+package TwttrStrmAnlyst.utility;
 /**
  * twiiterStramAnalysis GeneralMethod.java
  *
@@ -5,7 +6,7 @@
  * Created:2013-3-25 1:59:52
  * email: gh.chen@siat.ac.cn
  */
-package TwttrStrmAnlyst.utility;
+
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -17,10 +18,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
-import TwttrStrmAnlyst.bolt.countBolt;
 
 
 public class GeneralMethod {
@@ -70,7 +73,7 @@ public class GeneralMethod {
 			String nowTime=sdf2.format(nowDate);
 			 String cur_dir=System.getProperty("user.dir");				 
 			 String path=cur_dir+"/rawGPSData/"+sdf3.format(nowDate);
-			 countBolt.newFolder(path);
+			 newFolder(path);
 			
 			int min=nowDate.getMinutes();
 			int second=nowDate.getSeconds();
@@ -81,7 +84,8 @@ public class GeneralMethod {
 			return path;
 	 }
 	
-	    public static ArrayList getSortedHashtableByValue(Map h) {          
+	    @SuppressWarnings("rawtypes")
+		public static ArrayList getSortedHashtableByValue(Map h) {          
 	        ArrayList<Map.Entry<Object,Integer>> l = new ArrayList<Map.Entry<Object,Integer>>(h.entrySet());    
 	        Collections.sort(l, new Comparator<Map.Entry<Object,Integer>>() {      
 	            public int compare(Map.Entry<Object,Integer> o1, Map.Entry<Object,Integer> o2) {      
@@ -91,9 +95,11 @@ public class GeneralMethod {
 	        return l;    
 	    } 
 	    
-	    public static Map.Entry[] getSortedMapByValue(Map h) {  
+	    @SuppressWarnings({ "rawtypes", "unchecked" })
+		public static Map.Entry[] getSortedMapByValue(Map h) {  
 	    	Set set = h.entrySet();  
-	    	Map.Entry[] entries = (Map.Entry[]) set.toArray(new Map.Entry[set.size()]);  
+	    	@SuppressWarnings("unchecked")
+			Map.Entry[] entries = (Map.Entry[]) set.toArray(new Map.Entry[set.size()]);  
 	    	Arrays.sort(entries, new Comparator() {  
 	    		public int compare(Object arg0, Object arg1) {  
 	    			Long key1 = Long.valueOf(((Map.Entry) arg0).getValue().toString());  
@@ -104,6 +110,26 @@ public class GeneralMethod {
 
 	    	return entries;  
 	    } 
+	    
+	    public static Map<Object,Object> sortMapByValue(Map yourMap,int top){
+	    	Map<Object, Object> map = new LinkedHashMap<Object, Object>(); 
+
+	    	List<String> keyList = new ArrayList<String>(yourMap.keySet()); 
+	    	List<String> valueList = new ArrayList<String>(yourMap.values()); 
+	    	Set<String> sortedSet = new TreeSet<String>(valueList); 
+
+	    	Object[] sortedArray = sortedSet.toArray(); 
+	    	int size = sortedArray.length; 
+	    	if(size<top)top=size;
+
+//	    	for (int i = 0; i < size; i++) { 
+//	    		map.put(keyList.get(valueList.indexOf(sortedArray[i])), sortedArray[i]); 
+//	    	}
+	    	for (int i = size-1; i >=size-top; i--) { 
+	    		map.put(keyList.get(valueList.indexOf(sortedArray[i])), sortedArray[i]); 
+	    	}
+	    	return map; 
+	    }
 	    
 	    public static String getIntLocaltime(int interval,String folderName){
 	    	if(interval<0 || interval>59){
@@ -119,7 +145,7 @@ public class GeneralMethod {
 			if( (min%interval) ==0 && (second==0) ){
 				String nowTime=sdf2.format(nowDate);			 
 				 String cur_dir=System.getProperty("user.dir");
-				 cur_dir=cur_dir+"/"+folderName+sdf3.format(nowDate);
+				 cur_dir=cur_dir+"/"+folderName+"/"+sdf3.format(nowDate);
 				 newFolder(cur_dir);
 				 return cur_dir=cur_dir+"/"+nowTime;
 			}else 
