@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import TwttrStrmAnlyst.utility.GeneralClass;
 import TwttrStrmAnlyst.utility.GeneralMethod;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -30,17 +31,25 @@ public class TopicAnalysis implements IRichBolt{
 	}
 
 	public void execute(Tuple input) {
-		String tags=(String)input.getValueByField("tag");
+		String tags=input.getValueByField("tag").toString().trim();
 		String[] topic;
-		Integer count=0;
-		if(tags.equals("N_T")){
+		
+		if(tags.equals("N_T") ){
 			return;
 		}else{
 			topic=tags.split("#");
-		}
-			
-		for(int i=0;i<topicCount.size();i++){		
-			topicCount.put(topic, count);
+
+			for(int i=0;i<topic.length;i++){	
+				if(GeneralClass.isExits(topicCount, topic[i]))
+				{
+					Integer count=1;
+					topicCount.put(topic[i].trim(), count);
+				}
+				else if( (!topic[i].trim().equals(null)) && (!topicCount.equals(null)) ){
+					Integer count=GeneralClass.getCountByObj(topic[i].trim() );				
+					topicCount.put(topic[i].trim(), count++);
+				}
+			}
 		}
 		
 				
@@ -49,17 +58,13 @@ public class TopicAnalysis implements IRichBolt{
 		int second=nowDate.getSeconds();
 		
 		if(min%2==0 && second==0){
-			System.out.println(topicCount.entrySet());
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			Map<Object, Object> sortedtopicMap=GeneralMethod.sortMapByValue(topicCount,10);
 			topicCount.clear();
 			
-			//System.out.println(topicStatusCount.entrySet());
-			//ArrayList<Map.Entry<Object,Integer>> sortedtopicMap=GeneralMethod.getSortedHashtableByValue(topicCount);
-						
 			BufferedWriter br;
 			try {
-				String filename=GeneralMethod.getIntLocaltime(2, "mostPopulartopic");
+				String filename=GeneralMethod.getIntLocaltime(2, "mostHotTopic");
 				if(filename.equals(null)){
 					return;
 				}else
@@ -77,8 +82,7 @@ public class TopicAnalysis implements IRichBolt{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			}
-		
+			}		
 		
 	}
 
