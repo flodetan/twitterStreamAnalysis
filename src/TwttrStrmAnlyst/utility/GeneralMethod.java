@@ -145,8 +145,10 @@ public class GeneralMethod {
 			if( (min%interval) ==0 && (second==0) ){
 				String nowTime=sdf2.format(nowDate);			 
 				 String cur_dir=System.getProperty("user.dir");
-				 cur_dir=cur_dir+"/"+folderName+"/"+sdf3.format(nowDate);
+				 cur_dir=cur_dir+"/"+folderName;//+"/"+sdf3.format(nowDate);
 				 newFolder(cur_dir);
+//				 cur_dir=cur_dir+"/"+sdf3.format(nowDate);
+//				 newFolder(cur_dir);
 				 return cur_dir=cur_dir+"/"+nowTime;
 			}else 
 				return null;	

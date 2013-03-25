@@ -30,7 +30,7 @@ public class UserAnalysis implements IRichBolt {
 	private int taskId;
 	private OutputCollector _collector;
 	HashMap<Object, Integer> userFollowerCount=new HashMap<Object, Integer>(); // <userID, count>
-	//HashMap<Object, Integer> userStatusCount=new HashMap<Object, Integer>();
+	HashMap<Object, Integer> userStatusCount=new HashMap<Object, Integer>();
 
 	public void prepare(Map stormConf, TopologyContext context,
 			OutputCollector collector) {
@@ -50,22 +50,29 @@ public class UserAnalysis implements IRichBolt {
 		//userFollowerCount=new HashMap<Object, Integer>();
 		//userStatusCount=new  HashMap<Object, Integer>();
 		userFollowerCount.put(user, user.getFollowersCount());
-		//userFollowerCount.put(user, user.getStatusesCount());
-		
+		userStatusCount.put(user, user.getStatusesCount());
+				
 		Date nowDate=new Date();
 		int min=nowDate.getMinutes();
 		int second=nowDate.getSeconds();
 		
 		if(min%2==0 && second==0){
-			
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			Map<Object, Object> sortedUserMap=GeneralMethod.sortMapByValue(userFollowerCount,10);
+			userFollowerCount.clear();
+			Map<Object, Object> sortedStatusMap=GeneralMethod.sortMapByValue(userStatusCount,10);
+			userStatusCount.clear();
+			//System.out.println(userStatusCount.entrySet());
 			//ArrayList<Map.Entry<Object,Integer>> sortedUserMap=GeneralMethod.getSortedHashtableByValue(userFollowerCount);
-			String filename=GeneralMethod.getIntLocaltime(2, "mostPopularUser");	
-
+						
 			BufferedWriter br;
 			try {
-				br = new BufferedWriter(new FileWriter(filename,true));
+				String filename=GeneralMethod.getIntLocaltime(2, "mostPopularUser");
+				if(filename.equals(null)){
+					return;
+				}else
+					br = new BufferedWriter(new FileWriter(filename,true));
+				
 				int rank=0;
 				for(Entry d:sortedUserMap.entrySet()){
 					rank=rank+1;
@@ -79,8 +86,30 @@ public class UserAnalysis implements IRichBolt {
 				e.printStackTrace();
 			}
 			
+			
 			try {
-				userFollowerCount.clear();
+				String filename=GeneralMethod.getIntLocaltime(2, "mostActiveUser");
+				if(filename.equals(null)){
+					return;
+				}else
+					br = new BufferedWriter(new FileWriter(filename,true));
+				int rank=0;
+				for(Entry d:sortedStatusMap.entrySet()){
+					rank=rank+1;
+					User user2=(User) d.getKey();			
+					br.write("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getProfileImageURL());
+					System.out.print("\n"+ rank +","+user2.getScreenName()+","+d.getValue()+","+user2.getMiniProfileImageURL());
+					br.flush();
+				}
+				rank=0;	
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
+			try {
+				//userFollowerCount.clear();
+				//userStatusCount.clear();
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
