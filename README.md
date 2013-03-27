@@ -1,6 +1,4 @@
-twitterStreamAnalysis
-=====================
-#twitterHadoop
+#twitterStreamAnalysis 
 =============
 
 ###Modules
