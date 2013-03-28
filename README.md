@@ -20,7 +20,7 @@
 ----
 
 
-   this program will download twitter messages form Twitter stream API, and save to this folder named "YYYY-MM-DD-HH", means that it will generate each file for each file.
+   this program will download twitter messages form Twitter stream API, and save to this folder named "YYYY-MM-DD-HH", means that it will generate each file for each hour.
    
 4. At the same time , this program will generation 2-minute intervaled "mostActive","mostPopular" user statistics in this folder.
 
